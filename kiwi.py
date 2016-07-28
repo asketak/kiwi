@@ -1,6 +1,11 @@
 import csv,sys
 from pprint import pprint
 
+def diffdates(d1, d2):
+    #Date format: %Y-%m-%d %H:%M:%S
+    return (time.mktime(time.strptime(d2,"%Y-%m-%d %H:%M:%S")) -
+               time.mktime(time.strptime(d1, "%Y-%m-%d %H:%M:%S")))
+
 class Search_flights(object):
 	"""Main class for searching in flights"""
 
@@ -14,12 +19,23 @@ class Search_flights(object):
 		for row in reader:
 			for h, v in zip(headers, row):
 				self.column[h].append(v)
+		pprint(self.column)
+		print "====================="
 
 	def next_node(self,previous_flight,hist):
-		if len(hist) > 2:
-			return []
-		return [3,5,2]
-#		for x in xrange(1,len(self.column)):
+		""" Returns all flights, that can be attented"""
+		ret = []
+
+		if len(hist) > 5:
+			return ret
+		for x in xrange(0,len(self.column["source"])):
+			if (self.column["destination"][previous_flight] == self.column["source"][x]):
+
+	 #and self.column["arrival"][previous_flight] <= self.column["departure"][x]) :
+				ret.append(x);
+		print "ret-next node"
+		pprint(ret)
+		return ret
 
 		
 	def bfs(self, previous_flight, history):
@@ -34,8 +50,7 @@ class Search_flights(object):
 	def compute(self):
 		for x in xrange(1,len(self.column["source"])):
 			print "incompute"
-			history = []
-			self.bfs(x,history)
+			self.bfs(x,[])
 
 with open('data.txt', 'r') as myfile:
 	s = Search_flights(myfile)
