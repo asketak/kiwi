@@ -20,7 +20,6 @@ class Search_flights(object):
 			for h, v in zip(headers, row):
 				self.column[h].append(v)
 
-
 	def no_cycles(self,h,nxt):
 		tmp = h[:]
 		tmp.append(nxt)
@@ -48,25 +47,20 @@ class Search_flights(object):
 		return ret
 
 		
-	def bfs(self, previous_flight, history):
-		"""recursive BFS with checking for time and duplicates"""
+	def dfs(self, previous_flight, history):
+		"""recursive dfs with checking for time and duplicates"""
 		history.append(previous_flight)
 		nodes = self.next_node(previous_flight,history)
 		if len(nodes) > 0:
 			for nxt in nodes:
-				self.bfs(nxt,history[:])
+				self.dfs(nxt,history[:])
 		if len(history)>1:
 			print(",".join([ self.column["flight_number"][x] for x in history]))
-		#	print(",".join([ self.column["source"][x] for x in history]),self.column["destination"][history[-1]])
 
 	def compute(self):
 		for x in xrange(0,len(self.column["source"])):
-			self.bfs(x,[])
+			self.dfs(x,[])
 
-with open('data.txt', 'r') as myfile:
-	s = Search_flights(myfile)
-	s.compute()
-
-
-#Search_flights(sys.stdin.read()).compute()
-
+data=sys.stdin.readlines();
+s = Search_flights(data)
+s.compute()
